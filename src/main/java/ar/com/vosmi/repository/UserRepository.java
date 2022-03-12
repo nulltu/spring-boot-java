@@ -1,4 +1,5 @@
 package ar.com.vosmi.repository;
+
 import ar.com.vosmi.domain.User;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
