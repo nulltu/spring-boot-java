@@ -1,35 +1,41 @@
 package ar.com.vosmi.controller;
 
 import ar.com.vosmi.domain.User;
-import ar.com.vosmi.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import ar.com.vosmi.service.UserService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class UserController {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @RequestMapping("/users")
-    public List<User> users() {
-        return  userRepository.findAll();
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping("/user/{id}")
-    public User getUserById(@PathVariable Long id) {
-        User user = new User();
-        user.setId(id);
-        user.setFirstName("RUsbent");
-        user.setLastName("Matta");
-        user.setDocumentNumber(94246680L);
-        user.setEmail("rusbent.matta@gmail.com");
-        user.setCommentary("PRUEBA DE USUARIO REST");
+    /*** Find all users */
+    @GetMapping("/users")
+    public List<User> users() {
+        return  userService.getUsers();
+    }
 
-        return user;
+    /*** Get user by id */
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    /*** Create new user */
+    @PostMapping("/users")
+    public void createUser(@RequestBody User user){
+        userService.createUser(user);
+    }
+
+    /*** Delete user by id */
+    @DeleteMapping("/user/{id}")
+    public void deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
     }
 }
