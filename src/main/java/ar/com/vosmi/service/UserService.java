@@ -14,4 +14,6 @@ public interface UserService {
     User getUserById(Long id);
 
     void updateUser(User user);
+
+    boolean verifiedCredentials(User user);
 }

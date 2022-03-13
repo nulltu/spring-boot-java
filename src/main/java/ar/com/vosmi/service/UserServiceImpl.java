@@ -47,4 +47,18 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
+
+    public boolean verifiedCredentials(User user){
+        String query = "FROM User WHERE email = :email AND password = :password";
+        List<User> listUser = entityManager.createQuery(query)
+                .setParameter("email", user.getEmail())
+                .setParameter("password", user.getPassword())
+                .getResultList();
+
+        if(listUser.isEmpty()){
+            return false;
+        }else
+            return true;
+
+    }
 }
