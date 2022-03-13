@@ -44,7 +44,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
-    @Column(name = "lang_key", length = 5)
+    @Column(name = "lang_key", length = 10)
     private String langKey;
 
     @Column(name = "image_url", length = 256)

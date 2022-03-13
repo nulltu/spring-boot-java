@@ -12,4 +12,6 @@ public interface UserService {
     List<User> getUsers();
 
     User getUserById(Long id);
+
+    void updateUser(User user);
 }
