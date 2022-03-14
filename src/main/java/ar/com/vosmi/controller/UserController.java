@@ -3,6 +3,8 @@ package ar.com.vosmi.controller;
 import ar.com.vosmi.config.Constants;
 import ar.com.vosmi.domain.User;
 import ar.com.vosmi.service.UserService;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,10 @@ public class UserController {
     /*** Create new user */
     @PostMapping(USERS)
     public void createUser(@RequestBody User user){
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String passwordHash =  argon2.hash(1, 1024, 1, user.getPassword());
+        user.setPassword(passwordHash);
         userService.createUser(user);
     }
 

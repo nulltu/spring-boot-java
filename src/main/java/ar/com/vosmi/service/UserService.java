@@ -15,5 +15,5 @@ public interface UserService {
 
     void updateUser(User user);
 
-    boolean verifiedCredentials(User user);
+    User verifiedCredentialsAndGetUser(User user);
 }

@@ -2,6 +2,8 @@ package ar.com.vosmi.service;
 
 import ar.com.vosmi.domain.User;
 import ar.com.vosmi.repository.UserRepository;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,17 +50,20 @@ public class UserServiceImpl implements UserService{
         userRepository.deleteById(id);
     }
 
-    public boolean verifiedCredentials(User user){
-        String query = "FROM User WHERE email = :email AND password = :password";
+    public User verifiedCredentialsAndGetUser(User user){
+        String query = "FROM User WHERE email = :email";
         List<User> listUser = entityManager.createQuery(query)
                 .setParameter("email", user.getEmail())
-                .setParameter("password", user.getPassword())
                 .getResultList();
 
         if(listUser.isEmpty()){
-            return false;
-        }else
-            return true;
-
+            return null;
+        }
+        String passwordHashed = listUser.get(0).getPassword();
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        if(argon2.verify(passwordHashed, user.getPassword())){
+            return listUser.get(0);
+        }
+        return null;
     }
 }
