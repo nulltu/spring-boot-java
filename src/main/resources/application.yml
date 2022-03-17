@@ -10,7 +10,17 @@ spring:
     hibernate:
       ddl-auto: update
 
-  security:
-    user:
-      name: vosmi
-      password: vosmi
+#  security:
+#    user:
+#      name: vosmi
+#      password: vosmi
+
+security:
+  jwt:
+    secret: mysecret
+    ttlMillis: 6000000
+    issuer: Main
+
+server:
+  port: 8085
+
