@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=vosmi
+    username: vosmi
+    password: Myp@ssword
+  jpa:
+    show-sql: true
+    user: vosmi
+    hibernate:
+      ddl-auto: update
+
+  security:
+    user:
+      name: vosmi
+      password: vosmi
