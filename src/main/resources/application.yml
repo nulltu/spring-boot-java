@@ -24,3 +24,18 @@ security:
 server:
   port: 8085
 
+change:
+  jwt:
+    security:
+      enabled: true
+    timezone: "America/Bogota"
+    Issuer: "www.github.com/nulltu"
+    token:
+      auth:
+        path: "/v1.0/oauth/client_credential/accesstoken"
+      secret: "mySecret"
+      expires-in: 3600
+    excluded:
+     path: "/v1.0/multi,/v1.0/excluded"
+
+

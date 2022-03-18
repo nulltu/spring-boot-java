@@ -4,7 +4,6 @@ import ar.com.vosmi.domain.User;
 import ar.com.vosmi.service.AuthService;
 import ar.com.vosmi.service.UserService;
 import ar.com.vosmi.utils.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -31,9 +30,10 @@ public class AuthController {
         return ResponseEntity.ok(authService.signIn(paramMap.getFirst("client_id"), paramMap.getFirst("client_secret")));
     }
 
-    public AuthController(UserService userService, JWTUtil jwtUtil) {
+    public AuthController(UserService userService, JWTUtil jwtUtil, AuthService authService) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.authService = authService;
     }
 
     @PostMapping(LOGIN)
