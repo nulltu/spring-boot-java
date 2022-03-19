@@ -15,14 +15,10 @@ spring:
 #      name: vosmi
 #      password: vosmi
 
-security:
-  jwt:
-    secret: mysecret
-    ttlMillis: 6000000
-    issuer: Main
-
 server:
   port: 8085
+  error:
+    include-stacktrace: never
 
 change:
   jwt:
@@ -37,5 +33,7 @@ change:
       expires-in: 3600
     excluded:
      path: "/v1.0/multi,/v1.0/excluded"
+
+
 
 

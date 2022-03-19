@@ -1,96 +1,64 @@
 package ar.com.vosmi.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.fusionauth.jwt.Signer;
+import io.fusionauth.jwt.Verifier;
+import io.fusionauth.jwt.domain.JWT;
+import io.fusionauth.jwt.hmac.HMACSigner;
+import io.fusionauth.jwt.hmac.HMACVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.util.TimeZone;
 
-/**
- * @author Mahesh
- */
+
 @Component
 public class JWTUtil {
-    @Value("${security.jwt.secret}")
-    private String key;
+    @Value("${change.jwt.token.secret:secret}")
+    private String SECRET;
 
-    @Value("${security.jwt.issuer}")
-    private String issuer;
+    @Value("${change.jwt.timezone:UTC}")
+    private String TIMEZONE;
 
-    @Value("${security.jwt.ttlMillis}")
-    private long ttlMillis;
+    @Value("${change.jwt.expires-in:36000}")
+    private int EXPIRES_IN;
+
+    @Value("${change.jwt.issuer:none}")
+    private String ISSUER;
 
     private final Logger log = LoggerFactory
             .getLogger(JWTUtil.class);
 
-    /**
-     * Create a new token.
-     *
-     * @param id
-     * @param subject
-     * @return
-     */
-    public String create(String id, String subject) {
+    public String generateToken(Object src) {
 
-        // The JWT signature algorithm used to sign the token
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        String subject = GsonUtils.serialize(src);
+        Signer signer = HMACSigner.newSHA256Signer(SECRET);
+        TimeZone tz = TimeZone.getTimeZone(TIMEZONE);
+        ZonedDateTime zdt = ZonedDateTime.now(tz.toZoneId()).plusSeconds(EXPIRES_IN);
 
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
+        JWT jwt = new JWT()
+                .setIssuer(ISSUER)
+                .setIssuedAt(ZonedDateTime.now(tz.toZoneId()))
+                .setSubject(subject)
+                .setExpiration(zdt);
 
-        //  sign JWT with our ApiKey secret
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(key);
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
-        //  set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(now).setSubject(subject).setIssuer(issuer)
-                .signWith(signatureAlgorithm, signingKey);
-
-        if (ttlMillis >= 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }
-
-        // Builds the JWT and serializes it to a compact, URL-safe string
-        return builder.compact();
+        return JWT.getEncoder().encode(jwt, signer);
     }
 
-    /**
-     * Method to validate and read the JWT
-     *
-     * @param jwt
-     * @return
-     */
-    public String getValue(String jwt) {
-        // This line will throw an exception if it is not a signed JWS (as
-        // expected)
-        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key))
-                .parseClaimsJws(jwt).getBody();
-
-        return claims.getSubject();
+    public boolean validateToken(String encodedJWT) {
+        return false;
     }
 
-    /**
-     * Method to validate and read the JWT
-     *
-     * @param jwt
-     * @return
-     */
-    public String getKey(String jwt) {
-        // This line will throw an exception if it is not a signed JWS (as
-        // expected)
-        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key))
-                .parseClaimsJws(jwt).getBody();
+    public String getPayload(String encodeJWT) {
+        return null;
+    }
 
-        return claims.getId();
+    private JWT jwt(String encodedJWT){
+
+        Verifier verifier = HMACVerifier.newVerifier(SECRET);
+
+        return JWT.getDecoder().decode(encodedJWT, verifier);
     }
 }
