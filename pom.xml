@@ -110,7 +110,6 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <type>jar</type>
         </dependency>
     </dependencies>
 

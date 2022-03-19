@@ -1,6 +1,5 @@
 package ar.com.vosmi.utils;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Component
-@Data
 public class DateUtils {
 
     @Value("${change.jwt.timezone}")
@@ -27,7 +25,7 @@ public class DateUtils {
         return simpleDateFormat().format(now);
     }
 
-    public Long getDateMillis(){
+    public long getDateMillis(){
         Date now = new Date();
         String strDate = simpleDateFormat().format(now);
         Date strNow = new Date();

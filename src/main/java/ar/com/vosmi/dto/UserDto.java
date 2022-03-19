@@ -1,14 +1,17 @@
 package ar.com.vosmi.dto;
 
 import ar.com.vosmi.config.Constants;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Data
-public class UserDto {
+@Builder
+public class UserDto implements Serializable {
     private Long id;
 
     @Pattern(regexp = Constants.LOGIN_REGEX)

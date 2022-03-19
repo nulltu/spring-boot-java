@@ -1,12 +1,11 @@
 package ar.com.vosmi.utils;
 
+import io.fusionauth.jwt.JWTUtils;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
 import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.hmac.HMACSigner;
 import io.fusionauth.jwt.hmac.HMACVerifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,18 +21,16 @@ public class JWTUtil {
     @Value("${change.jwt.timezone:UTC}")
     private String TIMEZONE;
 
-    @Value("${change.jwt.expires-in:36000}")
+    @Value("${change.jwt.token.expires-in:36000}")
     private int EXPIRES_IN;
 
     @Value("${change.jwt.issuer:none}")
     private String ISSUER;
 
-    private final Logger log = LoggerFactory
-            .getLogger(JWTUtil.class);
 
     public String generateToken(Object src) {
 
-        String subject = GsonUtils.serialize(src);
+        String subject = GsonUtils.serializae(src);
         Signer signer = HMACSigner.newSHA256Signer(SECRET);
         TimeZone tz = TimeZone.getTimeZone(TIMEZONE);
         ZonedDateTime zdt = ZonedDateTime.now(tz.toZoneId()).plusSeconds(EXPIRES_IN);
@@ -48,11 +45,17 @@ public class JWTUtil {
     }
 
     public boolean validateToken(String encodedJWT) {
-        return false;
+
+        JWT jwt = JWTUtils.decodePayload(encodedJWT);
+
+        return jwt.isExpired();
     }
 
-    public String getPayload(String encodeJWT) {
-        return null;
+    public String getPayload(String encodedJWT) {
+
+        JWT jwt = jwt(encodedJWT);
+
+        return jwt.subject;
     }
 
     private JWT jwt(String encodedJWT){

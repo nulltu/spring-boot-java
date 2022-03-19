@@ -30,9 +30,9 @@ change:
       auth:
         path: "/v1.0/oauth/client_credential/accesstoken"
       secret: "mySecret"
-      expires-in: 3600
+      expires-in: 36000
     excluded:
-     path: "/v1.0/multi,/v1.0/excluded"
+     path: "/v1.0/multi,/v1.0/otraexlusion"
 
 
 

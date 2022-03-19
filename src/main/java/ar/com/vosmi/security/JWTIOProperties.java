@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "cambiar.jwt")
+@ConfigurationProperties(prefix = "change.jwt")
 public class JWTIOProperties {
 
     private Security security;

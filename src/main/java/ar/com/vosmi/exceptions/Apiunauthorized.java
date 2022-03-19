@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class Apiunauthorized extends Exception{
 
+    private static final long serialVersionUID = 2579281837938543267L;
+
     public Apiunauthorized(String message){
         super(message);
     }

@@ -6,6 +6,7 @@ import ar.com.vosmi.service.AuthService;
 import ar.com.vosmi.service.UserService;
 import ar.com.vosmi.utils.JWTUtil;
 import ar.com.vosmi.validators.AuthValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -14,20 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "v1.0")
 public class AuthController {
-    private static final String LOGIN = "/login";
 
-    private UserService userService;
-    private JWTUtil jwtUtil;
+    @Autowired
     private AuthService authService;
+    @Autowired
     private AuthValidator validator;
-
-    public AuthController(UserService userService, JWTUtil jwtUtil, AuthService authService, AuthValidator validator) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.authService = authService;
-        this.validator = validator;
-    }
-
 
     @PostMapping(
             path = "oauth/client_credential/accesstoken",

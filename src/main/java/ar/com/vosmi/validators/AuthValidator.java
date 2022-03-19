@@ -13,7 +13,7 @@ public class AuthValidator {
 
     public void validate(MultiValueMap<String,String> paramMap, String grantType) throws Apiunauthorized {
         if(grantType.isEmpty() || !grantType.equals(CLIENT_CREDENTIALS)){
-            message("El campo gran_type es invalido");
+            message("El campo grant_type es invalido");
         }
 
         if(Objects.isNull(paramMap)
